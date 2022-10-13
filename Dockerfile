@@ -4,8 +4,9 @@ MAINTAINER numpad0
 RUN echo "@edge http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 RUN echo "@testing http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 RUN apk update && apk add musl-dev iptables gnutls-dev readline-dev libnl3-dev lz4-dev libseccomp-dev@testing
+RUN apk add gnutls libev libev-dev gnutls-utils nettle libprotobuf libev-dev
 
-RUN buildDeps="xz openssl gcc autoconf make linux-headers"; \
+RUN buildDeps="xz openssl gcc autoconf make linux-headers patch"; \
 	set -x \
 	&& apk add $buildDeps \
 	&& cd \
@@ -26,18 +27,13 @@ RUN buildDeps="xz openssl gcc autoconf make linux-headers"; \
 	&& rm -fr ./$OC_FILE \
 	&& apk del --purge $buildDeps
 
-COPY cn-no-route.txt /tmp/
 RUN set -x \
 	&& sed -i 's/\.\/sample\.passwd/\/etc\/ocserv\/ocpasswd/' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/\(max-same-clients = \)2/\110/' /etc/ocserv/ocserv.conf \
+	&& sed -i 's/\(max-same-clients = \)2/\8/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/\.\.\/tests/\/etc\/ocserv/' /etc/ocserv/ocserv.conf \
 	&& sed -i 's/#\(compression.*\)/\1/' /etc/ocserv/ocserv.conf \
 	&& sed -i '/^ipv4-network = /{s/192.168.1.0/192.168.99.0/}' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/192.168.1.2/8.8.8.8/' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/^route/#route/' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/^no-route/#no-route/' /etc/ocserv/ocserv.conf \
-	&& cat /tmp/cn-no-route.txt >> /etc/ocserv/ocserv.conf \
-	&& rm -fr /tmp/cn-no-route.txt
+	&& sed -i 's/192.168.1.2/8.8.8.8/' /etc/ocserv/ocserv.conf
 
 WORKDIR /etc/ocserv
 
