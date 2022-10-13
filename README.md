@@ -5,7 +5,7 @@ I don't know what I'm doing, wanted to build a VPN concentrator container.
 Security considerations are not made in this repo.
 
 
-to run: `docker run --name ocserv --privileged -p 443:443 -p 443:443/udp -v /etc/ocserv/:~/ocserv-conf/ -d numpad0/ocserv`  
+to run: `docker run --name ocserv --privileged -p 443:443 -p 443:443/udp -v /home/username/ocserv-conf:/etc/ocserv/ -d numpad0/ocserv`  
 
 .  
 .  
