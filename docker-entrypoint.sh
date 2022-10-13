@@ -1,6 +1,6 @@
 #!/bin/ash
 
-if [ ! -f /etc/ocserv/certs/server-key.pem ] || [ ! -f /etc/ocserv/certs/server-cert.pem ]; then
+if [ ! -f /etc/ocserv/server-key.pem ] || [ ! -f /etc/ocserv/server-cert.pem ]; then
 	# Check environment variables
 	if [ -z "$CA_CN" ]; then
 		CA_CN="VPN CA"
@@ -27,8 +27,7 @@ if [ ! -f /etc/ocserv/certs/server-key.pem ] || [ ! -f /etc/ocserv/certs/server-
 	fi
 
 	# No certification found, generate one
-	mkdir -p /etc/ocserv/certs
-	cd /etc/ocserv/certs
+	cd /etc/ocserv/
 	certtool --generate-privkey --outfile ca-key.pem
 	cat > ca.tmpl <<-EOCA
 	cn = "$CA_CN"
@@ -41,7 +40,7 @@ if [ ! -f /etc/ocserv/certs/server-key.pem ] || [ ! -f /etc/ocserv/certs/server-
 	crl_signing_key
 	EOCA
 	certtool --generate-self-signed --load-privkey ca-key.pem --template ca.tmpl --outfile ca.pem
-	certtool --generate-privkey --outfile server-key.pem 
+	certtool --generate-privkey --outfile server-key.pem
 	cat > server.tmpl <<-EOSRV
 	cn = "$SRV_CN"
 	organization = "$SRV_ORG"

@@ -22,18 +22,10 @@ RUN buildDeps="xz openssl gcc autoconf make linux-headers patch"; \
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& mkdir -p /etc/ocserv \
-	&& cp ./doc/sample.config /etc/ocserv/ocserv.conf \
-	&& cd \
 	&& rm -fr ./$OC_FILE \
 	&& apk del --purge $buildDeps
 
-RUN set -x \
-	&& sed -i 's/\.\/sample\.passwd/\/etc\/ocserv\/ocpasswd/' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/\(max-same-clients = \)2/\8/' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/\.\.\/tests/\/etc\/ocserv/' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/#\(compression.*\)/\1/' /etc/ocserv/ocserv.conf \
-	&& sed -i '/^ipv4-network = /{s/192.168.1.0/192.168.99.0/}' /etc/ocserv/ocserv.conf \
-	&& sed -i 's/192.168.1.2/8.8.8.8/' /etc/ocserv/ocserv.conf
+COPY ocserv.conf /etc/ocserv/ocserv.conf
 
 WORKDIR /etc/ocserv
 
