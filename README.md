@@ -5,7 +5,17 @@ I don't know what I'm doing, wanted to build a VPN concentrator container.
 Security considerations are not made in this repo.
 
 
-to run: `docker run --name ocserv --privileged -p 443:443 -p 443:443/udp -v /home/username/ocserv-conf:/etc/ocserv/ -d numpad0/ocserv`  
+to run: 
+
+- `docker network create --subnet=10.0.0.0/16 dockernet` 
+- `vi ocserv.conf`
+  - `ipv4-network = 10.10.0.0`  
+  - `ipv4-netmask = 255.255.0.0`
+  - `dns = 10.10.0.1`
+  - `route = 10.0.0.0/255.0.0.0`
+  - `no-route = 192.168.0.0/255.255.0.0`
+- `docker rm -f ocserv; docker run --name ocserv --privileged -p 443:443 --net dockernet --ip 10.0.0.10 -v /root/ocserv-conf:/etc/ocserv/ numpad0/ocserv`
+- `route add -net 10.10.0.0 gw 10.0.0.10 netmask 255.255.0.0`
 
 .  
 .  
