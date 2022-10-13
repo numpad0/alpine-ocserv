@@ -14,6 +14,7 @@ to run:
   - `dns = 10.10.0.1`
   - `route = 10.0.0.0/255.0.0.0`
   - `no-route = 192.168.0.0/255.255.0.0`
+  - `persistent-cookies = true`
 - `docker rm -f ocserv; docker run --name ocserv --privileged -p 443:443 --net dockernet --ip 10.0.0.10 -v /root/ocserv-conf:/etc/ocserv/ numpad0/ocserv`
 - `route add -net 10.10.0.0 gw 10.0.0.10 netmask 255.255.0.0`
 
