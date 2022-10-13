@@ -1,5 +1,5 @@
 From alpine:latest
-MAINTAINER soniclidi
+MAINTAINER numpad0
 
 RUN echo "@edge http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 RUN echo "@testing http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
@@ -9,16 +9,15 @@ RUN buildDeps="xz openssl gcc autoconf make linux-headers"; \
 	set -x \
 	&& apk add $buildDeps \
 	&& cd \
-	&& wget http://www.infradead.org/ocserv/download.html -O download.html \
-	&& OC_VERSION=`sed -n 's/^.*version is <b>\(.*\)$/\1/p' download.html` \
-	&& OC_FILE="ocserv-$OC_VERSION" \
-	&& rm -fr download.html \
-	&& wget ftp://ftp.infradead.org/pub/ocserv/$OC_FILE.tar.xz \
+	&& OC_FILE="ocserv-1.1.6" \
+	&& wget https://www.infradead.org/ocserv/download/ocserv-1.1.6.tar.xz \
+	&& wget https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-1.1.6.patch \
 	&& tar xJf $OC_FILE.tar.xz \
 	&& rm -fr $OC_FILE.tar.xz \
 	&& cd $OC_FILE \
+	&& patch --strip=1 < ../cisco-webvpnlogin-1.1.6.patch \
 	&& sed -i '/#define DEFAULT_CONFIG_ENTRIES /{s/96/200/}' src/vpn.h \
-	&& ./configure \
+	&& ./configure --prefix=/usr --sysconfdir=/etc/ocserv --disable-maintainer-mode \
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& mkdir -p /etc/ocserv \
