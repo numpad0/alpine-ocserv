@@ -1,3 +1,16 @@
+# Mashup of soniclidi/alpine-ocserv + USECALLMANAGER.nz patch
+  
+I don't know what I'm doing, wanted to build a VPN concentrator container.  
+  
+Security considerations are not made in this repo.
+
+.  
+.  
+.  
+.  
+.  
+
+
 # alpine-ocserv
 Ocserv VPN docker image based on Alpine Linux
 
